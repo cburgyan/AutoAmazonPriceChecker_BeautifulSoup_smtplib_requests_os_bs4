@@ -22,6 +22,16 @@ amazon_html = amazon_response.text
 soup = bs4.BeautifulSoup(amazon_html, "html.parser")
 
 
+#Get Price of Item
+dollar_selector = ".a-price-whole"
+cent_selector = ".a-price-fraction"
+
+dollars = float(soup.select_one(selector=dollar_selector).get_text())
+print(dollars)
+cents = int(soup.select_one(selector=cent_selector).get_text()) / 100
+print(cents)
+price = dollars + cents
+print(price)
 
 
 
