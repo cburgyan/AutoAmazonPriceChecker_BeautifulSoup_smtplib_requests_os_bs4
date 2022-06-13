@@ -8,7 +8,7 @@ URL = "https://www.amazon.com/TheraBand-Resistance-Non-Latex-Professional-Dispen
 FROM_EMAIL = os.environ.get("FROM_EMAIL")
 AUTH_CODE = os.environ.get("AUTH_CODE")
 TO_EMAIL = os.environ.get("TO_EMAIL")
-PRICE_LIMIT = 105.00
+PRICE_LIMIT = 90
 
 
 #Get Amazon Response to Request
@@ -33,11 +33,9 @@ dollar_selector = ".a-price-whole"
 cent_selector = ".a-price-fraction"
 
 dollars = float(soup.select_one(selector=dollar_selector).get_text())
-print(dollars)
 cents = int(soup.select_one(selector=cent_selector).get_text()) / 100
-print(cents)
 price = dollars + cents
-print(price)
+print(f"Current Price: ${price}")
 
 
 #Get Product Name
@@ -58,3 +56,5 @@ if price < PRICE_LIMIT:
         print(f"Something Went Wrong In Sending The Email:\n{error_message}")
     else:
         print("Email was sent.")
+else:
+    print(f"The current price, ${price}, is above the desirable price, ${PRICE_LIMIT}.\nNo email was sent.")
