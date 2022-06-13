@@ -4,8 +4,8 @@ import smtplib
 import os
 
 
-URL = "https://www.amazon.com/gp/product/B019OOBYH0/ref=ox_sc_act_title_1?smid=ATVPDKIKX0DER&psc=1"
-FROM_EMAIL = os.environ.get("EMAIL")
+URL = "https://www.amazon.com/TheraBand-Resistance-Non-Latex-Professional-Dispenser/dp/B019OOBYH0/ref=sr_1_6?crid=2NAI7P1CUME6A&keywords=theraband+gold&qid=1655148036&s=sporting-goods&sprefix=theraband+gold%2Csporting%2C105&sr=1-6"
+FROM_EMAIL = os.environ.get("FROM_EMAIL")
 AUTH_CODE = os.environ.get("AUTH_CODE")
 TO_EMAIL = os.environ.get("TO_EMAIL")
 PRICE_LIMIT = 105.00
@@ -50,10 +50,10 @@ if price < PRICE_LIMIT:
     try:
         with smtplib.SMTP("smtp.mail.yahoo.com", port=587) as smtp_connection:
             smtp_connection.starttls()
-            smtp_connection.login(user=FROM_EMAIL, password=AUTH_CODE)
+            print(smtp_connection.login(user=FROM_EMAIL, password=AUTH_CODE))
             smtp_connection.sendmail(from_addr=FROM_EMAIL,
                                      to_addrs=TO_EMAIL,
-                                     msg=f"Subject: {product_name} is now only {price}\n\nHere is the link:\n{URL}")
+                                     msg=f"Subject: {product_name} is now only ${price}\n\nHere is the link:\n{URL}")
     except Exception as error_message:
         print(f"Something Went Wrong In Sending The Email:\n{error_message}")
     else:
