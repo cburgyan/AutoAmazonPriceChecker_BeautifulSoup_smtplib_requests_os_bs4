@@ -1,8 +1,14 @@
 import requests
 import bs4
+import smtplib
+import os
 
 
 URL = "https://www.amazon.com/gp/product/B019OOBYH0/ref=ox_sc_act_title_1?smid=ATVPDKIKX0DER&psc=1"
+FROM_EMAIL = os.environ.get("EMAIL")
+AUTH_CODE = os.environ.get("AUTH_CODE")
+TO_EMAIL = os.environ.get("TO_EMAIL")
+PRICE_LIMIT = 105.00
 
 
 #Get Amazon Response to Request
@@ -34,4 +40,21 @@ price = dollars + cents
 print(price)
 
 
+#Get Product Name
+product_name_selector = ".product-title-word-break"
+product_name = soup.select_one(selector=product_name_selector).get_text()
 
+
+#Send email if price is below PRICE_LIMIT
+if price < PRICE_LIMIT:
+    try:
+        with smtplib.SMTP("smtp.mail.yahoo.com", port=587) as smtp_connection:
+            smtp_connection.starttls()
+            smtp_connection.login(user=FROM_EMAIL, password=AUTH_CODE)
+            smtp_connection.sendmail(from_addr=FROM_EMAIL,
+                                     to_addrs=TO_EMAIL,
+                                     msg=f"Subject: {product_name} is now only {price}\n\nHere is the link:\n{URL}")
+    except Exception as error_message:
+        print(f"Something Went Wrong In Sending The Email:\n{error_message}")
+    else:
+        print("Email was sent.")
